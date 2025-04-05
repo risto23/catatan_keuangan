@@ -8,9 +8,14 @@ class TransactionLoading extends TransactionState {}
 
 class TransactionLoaded extends TransactionState {
   final List<TransactionModel> transactions;
-  final double balance;
+  final double totalIncome;
+  final double totalExpense;
 
-  TransactionLoaded({required this.transactions, required this.balance});
+  TransactionLoaded({
+    required this.transactions,
+    required this.totalIncome,
+    required this.totalExpense,
+  });
 }
 
 class TransactionError extends TransactionState {}
@@ -25,8 +30,15 @@ class TransactionCubit extends Cubit<TransactionState> {
     try {
       final txs = await DatabaseHelper.instance.getTransactions();
       _allTransactions = txs;
+
+      final totals = _calculateTotals(txs);
+
       emit(
-        TransactionLoaded(transactions: txs, balance: _calculateBalance(txs)),
+        TransactionLoaded(
+          transactions: txs,
+          totalIncome: totals['income']!,
+          totalExpense: totals['expense']!,
+        ),
       );
     } catch (_) {
       emit(TransactionError());
@@ -43,19 +55,29 @@ class TransactionCubit extends Cubit<TransactionState> {
             )
             .toList();
 
+    final totals = _calculateTotals(filtered);
+
     emit(
       TransactionLoaded(
         transactions: filtered,
-        balance: _calculateBalance(filtered),
+        totalIncome: totals['income']!,
+        totalExpense: totals['expense']!,
       ),
     );
   }
 
-  double _calculateBalance(List<TransactionModel> list) {
-    double total = 0;
+  Map<String, double> _calculateTotals(List<TransactionModel> list) {
+    double income = 0;
+    double expense = 0;
+
     for (var tx in list) {
-      total += tx.type == 'income' ? tx.amount : -tx.amount;
+      if (tx.type == 'income') {
+        income += tx.amount;
+      } else {
+        expense += tx.amount;
+      }
     }
-    return total;
+
+    return {'income': income, 'expense': expense};
   }
 }

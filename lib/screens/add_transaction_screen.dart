@@ -171,15 +171,29 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     color: isDark ? Colors.white70 : Colors.black87,
                   ),
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'income', child: Text("Pemasukan")),
+                items: [
+                  DropdownMenuItem(
+                    value: 'income',
+                    child: Text(
+                      "Pemasukan",
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
                   DropdownMenuItem(
                     value: 'expense',
-                    child: Text("Pengeluaran"),
+                    child: Text(
+                      "Pengeluaran",
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
                   ),
                 ],
                 onChanged: (v) => setState(() => _type = v!),
               ),
+
               const SizedBox(height: 30),
 
               // === Tombol Simpan ===

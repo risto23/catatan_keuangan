@@ -66,11 +66,12 @@ class HomeScreen extends StatelessWidget {
 
           if (state is TransactionLoaded) {
             final transactions = state.transactions;
-            final balance = state.balance;
+            final totalIncome = state.totalIncome;
+            final totalExpense = state.totalExpense;
 
             return Column(
               children: [
-                // Container Saldo
+                // Container Total Pemasukan & Pengeluaran
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
@@ -83,13 +84,27 @@ class HomeScreen extends StatelessWidget {
                       bottom: Radius.circular(20),
                     ),
                   ),
-                  child: Text(
-                    "Saldo: Rp ${balance.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.indigo,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Pemasukan: Rp ${totalIncome.toStringAsFixed(2)}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Pengeluaran: Rp ${totalExpense.toStringAsFixed(2)}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -140,13 +155,9 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: isDark ? Colors.deepPurpleAccent : Colors.indigo,
         child: Icon(
           Icons.add,
-          color:
-              isDark
-                  ? Colors.white
-                  : Colors.white, // Gunakan warna putih di semua mode
+          color: Colors.white, // Pastikan ikon selalu terlihat di semua mode
         ),
       ),
-
     );
   }
 }
